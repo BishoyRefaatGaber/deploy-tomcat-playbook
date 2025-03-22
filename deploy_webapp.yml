@@ -1,0 +1,43 @@
+- name: Deploy WAR File to Tomcat
+  hosts: web-server-tomcat
+  become: yes
+  vars_files:
+  - secret.yml
+  vars:
+    tomcat_webapps_dir: /var/lib/tomcat9/webapps
+    war_url: "https://github.com/Hirenmak/Tomcat-App/raw/main/sample.war"
+    war_filename: "sample.war"
+
+  tasks: 
+  - name: download war file 
+    get_url:
+      url: "{{ war_url }}"
+      dest: "/tmp/{{ war_filename }}" 
+    register: download_result
+  - name: copy war file to tomcat webapps dir
+    copy:
+      src: "/tmp/{{ war_filename }}"
+      dest: "/var/lib/tomcat9/webapps/{{ war_filename }}"
+      owner: tomcat
+      group: tomcat
+      mode: '0644' 
+      remote_src: yes
+  - name: restart tomcat
+    service:
+      name: tomcat9
+      state: restarted
+  - name: wait for tomcat to deploy war
+    wait_for:
+      host: localhost
+      port: 8080
+      delay: 10
+      timeout: 30
+  - name: verify application deployment
+    uri:
+      url: "http://localhost:8080/sample/"
+      status_code: 200
+    register: webpage_response
+  - name: debug application URL response
+    debug:
+      msg: "The application is accessible at: http://<server-ip>:8080/sample/"
+    when:  webpage_response.status == 200

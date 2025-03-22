@@ -1,0 +1,9 @@
+- name: Install and configure Tocat
+  hosts: web-server-tomcat
+  become: yes
+  vars_files:
+  - secret.yml
+  roles:
+    - install_tomcat
+    - install_java
+    - configure_tomcat

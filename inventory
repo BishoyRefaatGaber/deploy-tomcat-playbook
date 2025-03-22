@@ -1,0 +1,5 @@
+[web-server-tomcat]
+192.168.122.164
+
+[web-server-tomcat:vars]
+ansible_user={{ ansible_user }}

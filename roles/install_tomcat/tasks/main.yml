@@ -1,0 +1,10 @@
+- name: apt install tomcat
+  apt: 
+    name: tomcat9
+    state: present
+- name : enable and start tomcat
+  systemd:
+    name: tomcat9
+    enabled: yes
+    state: started    
+

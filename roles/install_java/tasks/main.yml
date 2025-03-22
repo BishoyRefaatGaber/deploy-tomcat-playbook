@@ -1,0 +1,8 @@
+- name: Ensure the dpkg is configured properly
+  become: yes
+  command: sudo dpkg --configure -a
+
+- name: install java
+  apt:
+    name: default-jdk
+    state: present  
