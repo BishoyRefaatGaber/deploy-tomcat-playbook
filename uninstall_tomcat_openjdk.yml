@@ -1,0 +1,22 @@
+- name: uninstall tomcat9
+  hosts: web-server-tomcat
+  become: yes
+  vars_files:
+  - secret.yml
+  tasks:
+  - name: remove tomcat9
+    apt:
+      name: tomcat9
+      state: absent
+
+
+- name: uninstall open jdk
+  hosts: web-server-tomcat
+  become: yes
+  vars_files:
+  - secret.yml
+  tasks:
+  - name: remove open jdk          
+    apt:
+      name: default-jdk
+      state: absent
